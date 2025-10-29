@@ -12,6 +12,17 @@ class AllRecipesPage extends StatefulWidget {
 }
 
 class _AllRecipesPageState extends State<AllRecipesPage> {
+
+  // то, что поиск
+  TextEditingController searchController = TextEditingController();
+  String searchQuery = "";
+
+  @override
+  void dispose(){
+    searchController.dispose();
+    super.dispose();
+  }
+
   // добавление в свои рецепты
   void addSweetToFavorite(Sweets sweet) {
     sweet.toFavorites = true;
@@ -26,15 +37,75 @@ class _AllRecipesPageState extends State<AllRecipesPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<Favorite>(
-      builder: (context, value, child) => Column(
+      builder: (context, value, child) {
+        final allSweets = Provider.of<Favorite>(context, listen: false).getSweetsList();
+
+        final filteredSweets = allSweets.where((sweet) {
+          return sweet.name.toLowerCase().contains(searchQuery.toLowerCase());
+        }).toList();
+       return Column(
         children: [
-          Container(child: Text('поиск в разработке')),
+          //-------------- поиск
+          Container(
+            margin: EdgeInsets.fromLTRB(20, 20, 10, 30),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: BoxBorder.all(color: Colors.pinkAccent),
+              ),
+            child: TextField(
+              controller: searchController,
+              cursorColor: Colors.pink,
+              style: TextStyle(
+                color: Colors.pink, fontSize: 18
+              ),
+              decoration: InputDecoration(
+                hintText: 'Введите название тортика',
+                  hintStyle: TextStyle(color: Colors.pink[300], fontSize: 15),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 20,
+                  ),
+                  suffixIcon: searchQuery.isNotEmpty
+                  ? IconButton(onPressed: (){
+                    setState(() {
+                      searchController.clear();
+                      searchQuery ="";
+                    });
+                  }, icon: Icon(Icons.clear, color: Colors.pink),
+                  )
+                  : null,
+              ),
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value;
+                });
+              },
+            )
+          ),
+
           SizedBox(height: 5),
+
+          //------------- списки
+
           Expanded(
-            child: ListView.builder(
-              itemCount: 4,
+            child: 
+               filteredSweets.isEmpty
+                ?Center(
+                  child: Column(
+                    children:[
+                      Image.asset('assets/unluck.jpg', height: 150, width: 150,),
+                      Text('анлак'),
+                      Text('торт не найден'),
+                    ]
+                  )
+                )
+             :
+            ListView.builder(
+              itemCount: filteredSweets.length,
               itemBuilder: (context, index) {
-                Sweets sweet = value.getSweetsList()[index];
+                Sweets sweet = filteredSweets[index];
                 return SweetsTile(
                   sweet: sweet,
                   onTap: () {
@@ -49,7 +120,8 @@ class _AllRecipesPageState extends State<AllRecipesPage> {
             ),
           ),
         ],
-      ),
+      );
+  }
     );
   }
 }
