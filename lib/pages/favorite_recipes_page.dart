@@ -15,21 +15,29 @@ class _FavoriteRecipesPageState extends State<FavoriteRecipesPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<Favorite>(
-      builder: (context, value, child) => Column(
-        children: [
-          Center(child: Text('Сохраненные рецептики')),
-          SizedBox(height: 5),
-          Expanded(
-            child: ListView.builder(
-              itemCount: value.getUserFavorite().length,
-              itemBuilder: (context, index) {
-                Sweets individualSweet = value.getUserFavorite()[index];
-                return FavoriteTile(sweet: individualSweet);
-              },
+      builder: (context, value, child) {
+        return Column(
+          children: [
+            Center(child: Text('Сохраненные рецептики')),
+            SizedBox(height: 5),
+            Expanded(
+              child: GridView.builder(
+                itemCount: value.getUserFavorite().length,
+                
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  
+                  crossAxisCount: 2,
+                  mainAxisExtent: 340
+                ),
+                itemBuilder: (context, index) {
+                  Sweets individualSweet = value.getUserFavorite()[index];
+                  return FavoriteTile(sweet: individualSweet);
+                },
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      },
     );
   }
 }
