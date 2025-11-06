@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_close_app/flutter_close_app.dart';
 import 'package:recipes_for_sweets_app/design/color.dart';
 import 'package:recipes_for_sweets_app/pages/all_recipes_page.dart';
 import 'package:recipes_for_sweets_app/pages/favorite_recipes_page.dart';
@@ -35,7 +36,7 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
-                child: Icon(Icons.menu_outlined, color: whiteColor,),
+                child: Icon(Icons.menu_outlined, color: whiteColor),
               ),
             ),
             onPressed: () {
@@ -69,7 +70,10 @@ class _HomePageState extends State<HomePage> {
           children: [
             Column(
               children: [
-                DrawerHeader(
+                SizedBox(height: 20),
+                Container(
+                  width: 160,
+                  height: 180,
                   child: Image.asset(
                     'assets/icon-cake.png',
                     color: Colors.white,
@@ -77,30 +81,60 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: Divider(color: Colors.white),
+                  child: Divider(color: whiteColor),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 25),
+                  child: GestureDetector(
+                    child: ListTile(
+                      leading: Icon(Icons.favorite, color: whiteColor),
+                      title: Text(
+                        'Сoхраненные',
+                        style: TextStyle(color: whiteColor),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/fav');
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 25),
+                  child: ListTile(
+                    leading: Icon(Icons.add, color: whiteColor),
+                    title: Text('Создать', style: TextStyle(color: whiteColor)),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 25),
+                  child: ListTile(
+                    leading: Icon(Icons.settings, color: whiteColor),
+                    title: Text(
+                      'Настройки',
+                      style: TextStyle(color: whiteColor),
+                    ),
+                  ),
                 ),
 
                 Padding(
                   padding: const EdgeInsets.only(left: 25),
                   child: ListTile(
-                    leading: Icon(Icons.home_outlined),
-                    title: Text('home'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 25),
-                  child: ListTile(
-                    leading: Icon(Icons.info_outline),
-                    title: Text('about'),
+                    leading: Icon(Icons.info_outline, color: whiteColor),
+                    title: Text('О нас', style: TextStyle(color: whiteColor)),
                   ),
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 25),
+              padding: const EdgeInsets.only(left: 25, bottom: 50),
               child: ListTile(
-                leading: Icon(Icons.exit_to_app_outlined),
-                title: Text('exit'),
+                leading: Icon(Icons.exit_to_app, color: whiteColor),
+                title: GestureDetector(
+                  child: Text('Выход', style: TextStyle(color: whiteColor)),
+                  onTap: () => FlutterCloseApp.close(),
+                ),
               ),
             ),
           ],

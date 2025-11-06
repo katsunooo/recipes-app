@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipes_for_sweets_app/design/color.dart';
-import 'package:recipes_for_sweets_app/favorite.dart';
-import 'package:recipes_for_sweets_app/sweets.dart';
+import 'package:recipes_for_sweets_app/data/favorite.dart';
+import 'package:recipes_for_sweets_app/data/sweets.dart';
 
+// ignore: must_be_immutable
 class FavoriteTile extends StatefulWidget {
   Sweets sweet;
   FavoriteTile({super.key, required this.sweet});
@@ -14,11 +15,7 @@ class FavoriteTile extends StatefulWidget {
 
 class _FavoriteTileState extends State<FavoriteTile> {
   void removeItemFavorite() {
-    widget.sweet.toFavorites = false;
-    Provider.of<Favorite>(
-      context,
-      listen: false,
-    ).remoteItemFavorite(widget.sweet);
+    Provider.of<Favorite>(context, listen: false).removeFromFav(widget.sweet);
   }
 
   @override
@@ -29,15 +26,17 @@ class _FavoriteTileState extends State<FavoriteTile> {
         alignment: AlignmentGeometry.topRight,
         children: [
           Container(
+            width: 200,
             decoration: BoxDecoration(
               color: whiteColor,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Row(
+              padding: const EdgeInsets.all(2.0),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  SizedBox(height: 34),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -63,15 +62,19 @@ class _FavoriteTileState extends State<FavoriteTile> {
                         ],
                       ),
                       Container(
-                        width: 175,
+                        height: 55,
+                        width: 155,
                         child: Center(
                           child: Text(
                             widget.sweet.name,
-                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                             style: TextStyle(
                               fontSize: 22,
+                              height: 1.1,
                               color: primaryColor,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w900,
                             ),
                           ),
                         ),
@@ -81,12 +84,12 @@ class _FavoriteTileState extends State<FavoriteTile> {
                         child: Text(
                           widget.sweet.description,
                           maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(width: 5),
                 ],
               ),
             ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipes_for_sweets_app/components/favorite_tile.dart';
-import 'package:recipes_for_sweets_app/favorite.dart';
-import 'package:recipes_for_sweets_app/sweets.dart';
+import 'package:recipes_for_sweets_app/data/favorite.dart';
+import 'package:recipes_for_sweets_app/data/sweets.dart';
+import 'package:recipes_for_sweets_app/design/color.dart';
 
 class FavoriteRecipesPage extends StatefulWidget {
   const FavoriteRecipesPage({super.key});
@@ -14,30 +15,58 @@ class FavoriteRecipesPage extends StatefulWidget {
 class _FavoriteRecipesPageState extends State<FavoriteRecipesPage> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<Favorite>(
-      builder: (context, value, child) {
-        return Column(
-          children: [
-            Center(child: Text('Сохраненные рецептики')),
-            SizedBox(height: 5),
-            Expanded(
-              child: GridView.builder(
-                itemCount: value.getUserFavorite().length,
-                
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  
-                  crossAxisCount: 2,
-                  mainAxisExtent: 340
+    return Scaffold(
+      backgroundColor: bgColor,
+      appBar: AppBar(
+        backgroundColor: bgColor,
+        title: Text(
+          'Сохраненные рецептики',
+          style: TextStyle(
+            color: primaryColor,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        
+      ),
+      body: Consumer<Favorite>(
+        builder: (context, value, child) {
+          final favorites = value.userFavorite;
+
+          if (favorites.isEmpty) {
+            return Center(
+              child: Text(
+                'Нет сохраненных\nрецептов',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 26,
+                  color: secondColor,
+                  fontWeight: FontWeight.w400,
                 ),
-                itemBuilder: (context, index) {
-                  Sweets individualSweet = value.getUserFavorite()[index];
-                  return FavoriteTile(sweet: individualSweet);
-                },
               ),
-            ),
-          ],
-        );
-      },
+            );
+          }
+
+          return Column(
+            children: [
+              SizedBox(height: 10),
+              Expanded(
+                child: GridView.builder(
+                  itemCount: favorites.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisExtent: 340,
+                  ),
+                  itemBuilder: (context, index) {
+                    Sweets individualSweet = favorites[index];
+                    return FavoriteTile(sweet: individualSweet);
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }

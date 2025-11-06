@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipes_for_sweets_app/components/sweets_tile.dart';
 import 'package:recipes_for_sweets_app/design/color.dart';
-import 'package:recipes_for_sweets_app/favorite.dart';
-import 'package:recipes_for_sweets_app/sweets.dart';
+import 'package:recipes_for_sweets_app/data/favorite.dart';
+import 'package:recipes_for_sweets_app/data/sweets.dart';
 
 class AllRecipesPage extends StatefulWidget {
   const AllRecipesPage({super.key});
@@ -24,22 +24,28 @@ class _AllRecipesPageState extends State<AllRecipesPage> {
     super.dispose();
   }
 
+  // провайде и база
+  // синхруем на входе
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Provider.of<Favorite>(context, listen: false).syncToFavorite();
+  }
+
   // добавление в свои рецепты
   void addSweetToFavorite(Sweets sweet) {
-    sweet.toFavorites = true;
-    Provider.of<Favorite>(context, listen: false).addItemToFavorite(sweet);
+    Provider.of<Favorite>(context, listen: false).addToFav(sweet);
   }
   // удаление на этой странице
   void remoteSweetToFavorite(Sweets sweet) {
-    sweet.toFavorites = false;
-    Provider.of<Favorite>(context, listen: false).remoteItemFavorite(sweet);
+    Provider.of<Favorite>(context, listen: false).removeFromFav(sweet);
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Favorite>(
       builder: (context, value, child) {
-        final allSweets = Provider.of<Favorite>(context, listen: false).getSweetsList();
+        final allSweets = Provider.of<Favorite>(context, listen: false).sweetRecipes;
 
         final filteredSweets = allSweets.where((sweet) {
           return sweet.name.toLowerCase().contains(searchQuery.toLowerCase());
@@ -88,14 +94,17 @@ class _AllRecipesPageState extends State<AllRecipesPage> {
                   },
                 )
               ),
-              SizedBox(width: 20,)
+              SizedBox(width: 16,)
             ],
           ),
           Container(
             height: 100,
+            width: 400,
             decoration: BoxDecoration(
               color: whiteColor
             ),
+            alignment: Alignment.center,
+            child: Text('здесь категории в будущем'),
             // здесь категории
           ),
 
@@ -121,10 +130,10 @@ class _AllRecipesPageState extends State<AllRecipesPage> {
                 return SweetsTile(
                   sweet: sweet,
                   onTap: () {
-                    if (sweet.toFavorites == false) {
-                      addSweetToFavorite(sweet);
-                    } else {
+                    if (sweet.toFavorites) {
                       remoteSweetToFavorite(sweet);
+                    } else {
+                      addSweetToFavorite(sweet);
                     }
                   },
                 );
