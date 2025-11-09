@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         backgroundColor: bgColor,
         leading: Builder(
           builder: (context) => IconButton(

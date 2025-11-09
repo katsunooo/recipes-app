@@ -4,6 +4,7 @@ import 'package:recipes_for_sweets_app/components/favorite_tile.dart';
 import 'package:recipes_for_sweets_app/data/favorite.dart';
 import 'package:recipes_for_sweets_app/data/sweets.dart';
 import 'package:recipes_for_sweets_app/design/color.dart';
+import 'package:recipes_for_sweets_app/pages/recipes_view_page.dart';
 
 class FavoriteRecipesPage extends StatefulWidget {
   const FavoriteRecipesPage({super.key});
@@ -18,6 +19,7 @@ class _FavoriteRecipesPageState extends State<FavoriteRecipesPage> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: bgColor,
         title: Text(
           'Сохраненные рецептики',
@@ -27,7 +29,6 @@ class _FavoriteRecipesPageState extends State<FavoriteRecipesPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        
       ),
       body: Consumer<Favorite>(
         builder: (context, value, child) {
@@ -58,8 +59,19 @@ class _FavoriteRecipesPageState extends State<FavoriteRecipesPage> {
                     mainAxisExtent: 340,
                   ),
                   itemBuilder: (context, index) {
-                    Sweets individualSweet = favorites[index];
-                    return FavoriteTile(sweet: individualSweet);
+                    Sweets mySweet = favorites[index];
+                    return FavoriteTile(
+                      sweet: mySweet,
+                      onOpen: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                RecipesViewPage(sweet: mySweet),
+                          ),
+                        );
+                      },
+                    );
                   },
                 ),
               ),

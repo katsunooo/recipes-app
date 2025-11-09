@@ -9,7 +9,11 @@ import 'package:recipes_for_sweets_app/pages/welcome_page.dart';
 
 void main() async {
   await Hive.initFlutter();
+  await Hive.deleteFromDisk();
   Hive.registerAdapter(SweetsAdapter());
+  Hive.registerAdapter(IngredientAdapter());
+  Hive.registerAdapter(NutritionAdapter());
+  Hive.registerAdapter(CookingStepAdapter());
   runApp(const MainApp());
 }
 
